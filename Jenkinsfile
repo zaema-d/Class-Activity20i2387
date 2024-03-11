@@ -2,47 +2,32 @@ pipeline {
     agent any
 
     environment {
-        BRANCH_NAME = '' // Initialize an env var 
+        // This is now set using the GIT_BRANCH environment variable
+        BRANCH_NAME = "${env.GIT_BRANCH.split('/')[-1]}"
     }
 
     stages {
-        stage('Prepare') {
-            steps {
-                script {
-                    // Extract the branch name and store it in the variable
-                    BRANCH_NAME = sh(script: 'git rev-parse --abbrev-ref HEAD', returnStdout: true).trim()
-                }
-            }
-        }
-
         stage('Install Dependencies') {
             steps {
-                script {
-                    // Install dependencies from requirements.txt
-                    sh 'pip install -r requirements.txt'
-                }
+                bat 'pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                script {
-                    // Run pytest
-                    sh 'pytest'
-                }
+                bat 'pytest'
             }
         }
 
         stage('Deploy') {
             steps {
+                // Here we're using the BRANCH_NAME environment variable
                 script {
-                    
                     if (BRANCH_NAME == 'master') {
                         echo "Deploying to production as branch is ${BRANCH_NAME}..."
-                        
+                        // Insert your deployment commands here
                     } else {
                         echo "Skipping deployment as branch is ${BRANCH_NAME}."
-                        
                     }
                 }
             }
