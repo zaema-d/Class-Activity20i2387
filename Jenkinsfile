@@ -1,10 +1,9 @@
 pipeline {
     agent any
 
+    
     environment {
-        // The branch name is usually provided by Jenkins in multibranch pipelines.
-        // This can differ if you're using a different job type.
-        BRANCH_NAME = "${env.BRANCH_NAME}"
+    BRANCH_NAME = "${GIT_BRANCH ?: 'unknown'}".tokenize('/')[-1]
     }
 
     stages {
