@@ -19,7 +19,8 @@ pipeline {
 
         stage('Run Tests') {
             steps {
-                bat 'call C:\\Users\\zaema\\anaconda3\\Scripts\\activate.bat && pytest .'
+                bat 'call C:\\Users\\zaema\\anaconda3\\Scripts\\activate.bat && pytest test.py'
+
             }
         }
 
