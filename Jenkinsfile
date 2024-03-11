@@ -2,26 +2,28 @@ pipeline {
     agent any
 
     environment {
-        // This is now set using the GIT_BRANCH environment variable
-        BRANCH_NAME = "${env.GIT_BRANCH.split('/')[-1]}"
+        // The branch name is usually provided by Jenkins in multibranch pipelines.
+        // This can differ if you're using a different job type.
+        BRANCH_NAME = "${env.BRANCH_NAME}"
     }
 
     stages {
         stage('Install Dependencies') {
             steps {
-                bat 'pip install -r requirements.txt'
+                // Activate Anaconda and install dependencies
+                bat 'call C:\\Users\\zaema\\anaconda3\\Scripts\\activate.bat && pip install -r requirements.txt'
             }
         }
 
         stage('Run Tests') {
             steps {
-                bat 'pytest'
+                // Ensure the right Anaconda environment is activated before running tests
+                bat 'call C:\\Users\\zaema\\anaconda3\\Scripts\\activate.bat && pytest'
             }
         }
 
         stage('Deploy') {
             steps {
-                // Here we're using the BRANCH_NAME environment variable
                 script {
                     if (BRANCH_NAME == 'master') {
                         echo "Deploying to production as branch is ${BRANCH_NAME}..."
